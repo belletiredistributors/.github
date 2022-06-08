@@ -21,10 +21,8 @@ on:
         secrets:
             nuget-source-access-token:
                 required: true
-                type: string
             octo-api-key:
                 required: true
-                type: string
     push:
         branches: [dev]
 
