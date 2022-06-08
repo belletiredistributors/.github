@@ -9,6 +9,8 @@ on:
         secrets:
             nuget-source-access-token:
                 required: true
+            nuget-source-url:
+                required: true
     pull_request:
         branches: [$default-branch, dev]
 
@@ -22,7 +24,7 @@ jobs:
               uses: actions/setup-dotnet@v1
               with:
                   dotnet-version: 6.0.x
-                  source-url: https://nuget.pkg.github.com/belletiredistributors/index.json
+                  source-url: ${{ secrets.nuget-source-url }}
               env:
                   NUGET_AUTH_TOKEN: ${{ secrets.nuget-source-access-token }}
 

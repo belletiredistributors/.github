@@ -21,7 +21,11 @@ on:
         secrets:
             nuget-source-access-token:
                 required: true
+            nuget-source-url:
+                required: true
             octo-api-key:
+                required: true
+            octo-cli-server:
                 required: true
     push:
         branches: [dev]
@@ -61,8 +65,6 @@ jobs:
     deploy_octopus_package:
         needs: build_and_test
         runs-on: ubuntu-latest
-        env:
-            OCTOPUS_CLI_SERVER: https://belletire.octopus.app/
         steps:
             - name: Download publish output
               uses: actions/download-artifact@v2
@@ -79,10 +81,10 @@ jobs:
                   version: 7.4.3190
 
             - name: Create Octopus Package
-              run: octo pack --id=${{ inputs.octo-package-name }} --server=${{ env.OCTOPUS_CLI_SERVER }} --apiKey=${{ secrets.octo-api-key }} --format="zip" --version="$PACKAGE_VERSION" --basePath="./publish/${{ inputs.app-name }}" --outFolder="./package"
+              run: octo pack --id=${{ inputs.octo-package-name }} --server=${{ secrets.octo-cli-server }} --apiKey=${{ secrets.octo-api-key }} --format="zip" --version="$PACKAGE_VERSION" --basePath="./publish/${{ inputs.app-name }}" --outFolder="./package"
 
             - name: Push Octopus Package
-              run: octo push --server=${{ env.OCTOPUS_CLI_SERVER }} --apiKey=${{ secrets.octo-api-key }} --package="./package/${{ inputs.octo-package-name }}.${{ env.PACKAGE_VERSION }}.zip"
+              run: octo push --server=${{ secrets.octo-cli-server }} --apiKey=${{ secrets.octo-api-key }} --package="./package/${{ inputs.octo-package-name }}.${{ env.PACKAGE_VERSION }}.zip"
 
             - name: Create Octopus Release
-              run: octo create-release --project="${{ inputs.octo-project-name }}" --server=${{ env.OCTOPUS_CLI_SERVER }} --apiKey=${{ secrets.octo-api-key }} --deployTo=Test --releaseNumber="${{ env.PACKAGE_VERSION }}" --package="${{ inputs.octo-package-name }}:${{ env.PACKAGE_VERSION }}"
+              run: octo create-release --project="${{ inputs.octo-project-name }}" --server=${{ secrets.octo-cli-server }} --apiKey=${{ secrets.octo-api-key }} --deployTo=Test --releaseNumber="${{ env.PACKAGE_VERSION }}" --package="${{ inputs.octo-package-name }}:${{ env.PACKAGE_VERSION }}"

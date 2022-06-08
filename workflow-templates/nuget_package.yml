@@ -1,45 +1,14 @@
 name: BT Org NuGet Publish
 
 on:
-    workflow_call:
-        inputs:
-            publish-target-path:
-                required: true
-                type: string
-        secrets:
-            nuget-source-access-token:
-                required: true
     release:
         types: [published]
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        name: Release New Nuget Package
-        steps:
-            - name: Get the version
-              id: get_version
-              run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-
-            - name: Checkout Repository
-              uses: actions/checkout@v1
-
-            - name: Get ProperyGroup Line
-              id: get_property_group_location
-              run: "echo ::set-output name=LOCATION::$(grep -n '<PropertyGroup>' ${{ inputs.publish-target-path }} | cut -d : -f 1)"
-
-            - name: Setup .NET Core @ Latest
-              uses: actions/setup-dotnet@v1
-              with:
-                  source-url: https://nuget.pkg.github.com/belletiredistributors/index.json
-              env:
-                  NUGET_AUTH_TOKEN: ${{ secrets.nuget-source-access-token }}
-
-            - name: Set Project Version
-              run: sed -i "${{steps.get_property_group_location.outputs.LOCATION}} a \    <Version>${{steps.get_version.outputs.VERSION}}</Version>" ${{ inputs.publish-target-path }}
-
-            - name: Build and Generate NuGet package
-              run: dotnet pack  ${{ inputs.publish-target-path }}} -c Release -o out -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-
-            - name: Publish Package
-              run: dotnet nuget push ./src/BelleTire.AppName/out/*.nupkg --skip-duplicate
+    call-workflow-nuget-push:
+        uses: belletiredistributors/.github/.github/workflows/nuget_package.yml@main
+        with:
+            publish-target-path: PATH TO .SLN OR .CSPROJ TO PUBLISH
+        secrets:
+            nuget-source-access-token: ${{ secrets.NUGET_SOURCE_ACCESSTOKEN }}
+            nuget-source-url: ${{ secrets.NUGET_SOURCE_URL }}
