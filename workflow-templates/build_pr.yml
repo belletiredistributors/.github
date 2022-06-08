@@ -1,0 +1,36 @@
+name: BT Org Build and Test
+
+on:
+    workflow_call:
+        inputs:
+            build-target-path:
+                required: true
+                type: string
+        secrets:
+            nuget-source-access-token:
+                required: true
+    pull_request:
+        branches: [$default-branch, dev]
+
+jobs:
+    build_and_test:
+        runs-on: windows-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v1
+              with:
+                  dotnet-version: 6.0.x
+                  source-url: https://nuget.pkg.github.com/belletiredistributors/index.json
+              env:
+                  NUGET_AUTH_TOKEN: ${{ secrets.nuget-source-access-token }}
+
+            - name: Restore dependencies
+              run: dotnet restore ${{ inputs.build-target-path }}
+
+            - name: Build
+              run: dotnet build --no-restore ${{ inputs.build-target-path }}
+
+            - name: Test
+              run: dotnet test --no-build --verbosity normal ${{ inputs.build-target-path }}
