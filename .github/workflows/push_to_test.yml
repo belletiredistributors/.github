@@ -1,0 +1,90 @@
+name: BT Org Test and Deploy Dev
+
+on:
+    workflow_call:
+        inputs:
+            app-name:
+                required: true
+                type: string
+            build-target-path:
+                required: true
+                type: string
+            publish-target-path:
+                required: true
+                type: string
+            octo-package-name:
+                required: true
+                type: string
+            octo-project-name:
+                required: true
+                type: string
+        secrets:
+            nuget-source-access-token:
+                required: true
+            nuget-source-url:
+                required: true
+            octo-api-key:
+                required: true
+            octo-cli-server:
+                required: true
+    push:
+        branches: [dev]
+
+jobs:
+    build_and_test:
+        runs-on: windows-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v1
+              with:
+                  dotnet-version: 6.0.x
+                  source-url: ${{ secrets.nuget-source-url }}
+              env:
+                  NUGET_AUTH_TOKEN: ${{ secrets.nuget-source-access-token }}
+
+            - name: Restore dependencies
+              run: dotnet restore ${{ inputs.build-target-path }}
+
+            - name: Build
+              run: dotnet build --no-restore ${{ inputs.build-target-path }}
+
+            - name: Test
+              run: dotnet test --no-build --verbosity normal ${{ inputs.build-target-path }}
+
+            - name: Publish
+              run: dotnet publish ${{ inputs.publish-target-path }} --output ./publish/${{ inputs.app-name }}/ -c Release
+
+            - name: Save publish output
+              uses: actions/upload-artifact@v2
+              with:
+                  name: ${{ inputs.app-name }}
+                  path: ./publish/${{ inputs.app-name }}/
+
+    deploy_octopus_package:
+        needs: build_and_test
+        runs-on: ubuntu-latest
+        steps:
+            - name: Download publish output
+              uses: actions/download-artifact@v2
+              with:
+                  name: ${{ inputs.app-name }}
+                  path: ./publish/${{ inputs.app-name }}/
+
+            - name: Set version
+              run: echo "PACKAGE_VERSION=$(date +'%Y.%m.%d').$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+
+            - name: Install Octopus Deploy
+              uses: OctopusDeploy/install-octocli@v1
+              with:
+                  version: 7.4.3190
+
+            - name: Create Octopus Package
+              run: octo pack --id=${{ inputs.octo-package-name }} --server=${{ secrets.octo-cli-server }} --apiKey=${{ secrets.octo-api-key }} --format="zip" --version="$PACKAGE_VERSION" --basePath="./publish/${{ inputs.app-name }}" --outFolder="./package"
+
+            - name: Push Octopus Package
+              run: octo push --server=${{ secrets.octo-cli-server }} --apiKey=${{ secrets.octo-api-key }} --package="./package/${{ inputs.octo-package-name }}.${{ env.PACKAGE_VERSION }}.zip"
+
+            - name: Create Octopus Release
+              run: octo create-release --project="${{ inputs.octo-project-name }}" --server=${{ secrets.octo-cli-server }} --apiKey=${{ secrets.octo-api-key }} --deployTo=Test --releaseNumber="${{ env.PACKAGE_VERSION }}" --package="${{ inputs.octo-package-name }}:${{ env.PACKAGE_VERSION }}"

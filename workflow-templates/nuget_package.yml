@@ -1,0 +1,14 @@
+name: BT Org NuGet Publish
+
+on:
+    release:
+        types: [published]
+
+jobs:
+    call-workflow-nuget-push:
+        uses: belletiredistributors/.github/.github/workflows/nuget_package.yml@main
+        with:
+            publish-target-path: PATH TO .SLN OR .CSPROJ TO PUBLISH
+        secrets:
+            nuget-source-access-token: ${{ secrets.NUGET_SOURCE_ACCESSTOKEN }}
+            nuget-source-url: ${{ secrets.NUGET_SOURCE_URL }}

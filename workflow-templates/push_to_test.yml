@@ -1,0 +1,20 @@
+name: Push to Test on Merge to Dev
+
+on:
+    push:
+        branches: [dev]
+
+jobs:
+    call-workflow-build-test-deploy:
+        uses: belletiredistributors/.github/.github/workflows/push_to_test.yml@main
+        with:
+            app-name: YOUR APP NAME
+            octo-package-name: YOUR OCTOPUS PACKAGE NAME
+            octo-project-name: YOUR COTOCPUS PROJECT NAME
+            build-target-path: PATH TO .SLN OR .CSPROJ TO BUILD
+            publish-target-path: PATH TO .SLN OR .CSPROJ TO PUBLISH
+        secrets:
+            nuget-source-access-token: ${{ secrets.NUGET_SOURCE_ACCESSTOKEN }}
+            nuget-source-url: ${{ secrets.NUGET_SOURCE_URL }}
+            octo-api-key: ${{ secrets.OCTOPUS_APIKEY }}
+            octo-cli-server: ${{ secrets.OCTOPUS_CLI_SERVER }}

@@ -1,0 +1,14 @@
+name: BT Org Build and Test
+
+on:
+    pull_request:
+        branches: [$default-branch, dev]
+
+jobs:
+    call-workflow-build:
+        uses: belletiredistributors/.github/.github/workflows/build_pr.yml@main
+        with:
+            build-target-path: PATH TO .SLN OR .CSPROJ TO BUILD
+        secrets:
+            nuget-source-access-token: ${{ secrets.NUGET_SOURCE_ACCESSTOKEN }}
+            nuget-source-url: ${{ secrets.NUGET_SOURCE_URL }}
