@@ -42,7 +42,7 @@ jobs:
               run: sed -i "${{steps.get_property_group_location.outputs.LOCATION}} a \    <Version>${{steps.get_version.outputs.VERSION}}</Version>" ${{ inputs.publish-target-path }}
 
             - name: Build and Generate NuGet package
-              run: dotnet pack  ${{ inputs.publish-target-path }}} -c Release -o ./out -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+              run: dotnet pack  ${{ inputs.publish-target-path }} -c Release -o ./out -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
             - name: Publish Package
               run: dotnet nuget push ./out/*.nupkg --skip-duplicate
