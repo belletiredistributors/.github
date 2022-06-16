@@ -40,6 +40,9 @@ jobs:
 
             - name: Set Project Version
               run: sed -i "${{steps.get_property_group_location.outputs.LOCATION}} a \    <Version>${{steps.get_version.outputs.VERSION}}</Version>" ${{ inputs.publish-target-path }}
+              
+            - name: Set Project Version
+              run: sed -i "${{steps.get_property_group_location.outputs.LOCATION}} a \    <PackageVersion>${{steps.get_version.outputs.VERSION}}</PackageVersion>" ${{ inputs.publish-target-path }}
 
             - name: Build
               run: dotnet build ${{ inputs.publish-target-path }} -c Release
