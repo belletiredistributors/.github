@@ -1,12 +1,9 @@
-name: BT Org Test and Deploy 
+name: BT Org Test and Deploy
 
 on:
     workflow_call:
         inputs:
             app-name:
-                required: true
-                type: string
-            branch:
                 required: true
                 type: string
             build-target-path:
@@ -26,7 +23,7 @@ on:
                 type: string
             dotnet-version:
                 required: false
-                type: string            
+                type: string
         secrets:
             nuget-source-access-token:
                 required: true
@@ -36,8 +33,6 @@ on:
                 required: true
             octo-cli-server:
                 required: true
-    push:
-        branches: [${{ inputs.branch }}]
 
 jobs:
     build_and_test:
