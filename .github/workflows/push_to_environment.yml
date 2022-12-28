@@ -1,4 +1,4 @@
-name: BT Org Test and Deploy Dev
+name: BT Org Test and Deploy
 
 on:
     workflow_call:
@@ -18,6 +18,12 @@ on:
             octo-project-name:
                 required: true
                 type: string
+            octo-channel:
+                required: false
+                type: string
+            dotnet-version:
+                required: false
+                type: string
         secrets:
             nuget-source-access-token:
                 required: true
@@ -27,8 +33,6 @@ on:
                 required: true
             octo-cli-server:
                 required: true
-    push:
-        branches: [dev]
 
 jobs:
     build_and_test:
@@ -36,10 +40,20 @@ jobs:
         steps:
             - uses: actions/checkout@v2
 
-            - name: Setup .NET
+            - name: Setup .NET Default
               uses: actions/setup-dotnet@v1
+              if: ${{ inputs.dotnet-version == '' }}
               with:
                   dotnet-version: 6.0.x
+                  source-url: ${{ secrets.nuget-source-url }}
+              env:
+                  NUGET_AUTH_TOKEN: ${{ secrets.nuget-source-access-token }}
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v1
+              if: ${{ inputs.dotnet-version != '' }}
+              with:
+                  dotnet-version: ${{ inputs.dotnet-version }}
                   source-url: ${{ secrets.nuget-source-url }}
               env:
                   NUGET_AUTH_TOKEN: ${{ secrets.nuget-source-access-token }}
@@ -86,5 +100,10 @@ jobs:
             - name: Push Octopus Package
               run: octo push --server=${{ secrets.octo-cli-server }} --apiKey=${{ secrets.octo-api-key }} --package="./package/${{ inputs.octo-package-name }}.${{ env.PACKAGE_VERSION }}.zip"
 
-            - name: Create Octopus Release
+            - name: Create Octopus Release For Default Environment
+              if: ${{ inputs.octo-channel == '' }}
               run: octo create-release --project="${{ inputs.octo-project-name }}" --server=${{ secrets.octo-cli-server }} --apiKey=${{ secrets.octo-api-key }} --deployTo=Test --releaseNumber="${{ env.PACKAGE_VERSION }}" --package="${{ inputs.octo-package-name }}:${{ env.PACKAGE_VERSION }}"
+
+            - name: Create Octopus Release for Channel
+              if: ${{ inputs.octo-channel != '' }}
+              run: octo create-release --project="${{ inputs.octo-project-name }}" --server=${{ secrets.octo-cli-server }} --apiKey=${{ secrets.octo-api-key }} --channel=${{ inputs.octo-channel }} --releaseNumber="${{ env.PACKAGE_VERSION }}" --package="${{ inputs.octo-package-name }}:${{ env.PACKAGE_VERSION }}"

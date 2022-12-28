@@ -1,4 +1,4 @@
-name: Push to Test on Merge to Dev
+name: Push to Environment on Merge
 
 on:
     push:
@@ -6,11 +6,12 @@ on:
 
 jobs:
     call-workflow-build-test-deploy:
-        uses: belletiredistributors/.github/.github/workflows/push_to_test.yml@main
+        uses: belletiredistributors/.github/.github/workflows/push_to_environment.yml@main
         with:
             app-name: YOUR APP NAME
             octo-package-name: YOUR OCTOPUS PACKAGE NAME
             octo-project-name: YOUR COTOCPUS PROJECT NAME
+            octo-channel: What channel to use for the Octopus release
             build-target-path: PATH TO .SLN OR .CSPROJ TO BUILD
             publish-target-path: PATH TO .SLN OR .CSPROJ TO PUBLISH
         secrets:
