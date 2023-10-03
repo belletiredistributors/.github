@@ -2,7 +2,7 @@ name: BT Org Build and Test
 
 on:
     pull_request:
-        branches: [$default-branch, dev]
+        branches: [$default-branch, dev, test]
 
 jobs:
     call-workflow-build:
