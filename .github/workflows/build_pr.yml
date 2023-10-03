@@ -12,7 +12,7 @@ on:
             nuget-source-url:
                 required: true
     pull_request:
-        branches: [$default-branch, dev]
+        branches: [$default-branch, dev, test]
 
 jobs:
     build_and_test:
