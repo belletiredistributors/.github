@@ -87,7 +87,7 @@ jobs:
                   path: ./publish/${{ inputs.app-name }}/
 
             - name: Set version
-              run: echo "PACKAGE_VERSION=$(date +'%Y.%m.%d').$GITHUB_RUN_ID$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+              run: echo "PACKAGE_VERSION=$(date +'%Y.%m.%d').$GITHUB_RUN_NUMBER-$GITHUB_RUN_ID" >> $GITHUB_ENV
 
             - name: Install Octopus Deploy
               uses: OctopusDeploy/install-octocli@v1
