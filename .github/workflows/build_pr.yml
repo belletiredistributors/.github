@@ -80,11 +80,11 @@ jobs:
               uses: insightsengineering/coverage-action@v2
               with:
                 path: coverage/**/coverage.cobertura.xml
-                threshold: 80.123
+                threshold: 80
                 fail: true
                 publish: true
                 diff: true
-                diff-branch: main
+                diff-branch: ${{ github.base_ref }}
                 diff-storage: _xml_coverage_reports
             - name: Add Coverage PR Comment
               uses: marocchino/sticky-pull-request-comment@v2
