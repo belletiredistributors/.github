@@ -47,8 +47,8 @@ jobs:
                   base-size: 200
                   growth-rate: 2.0
                   test-factor: 1.0
-            # - name: Pre-processing Coverage Report
-            #   run: sed -i 's#filename="#filename="src/#g' coverage/**/*.xml
+            - name: Pre-processing Coverage Report
+              run: sed -i "s#filename=\"#filename=\"src/#g" coverage/**/*.xml
             - name: Publish coverage report for changed files
               uses: 5monkeys/cobertura-action@master
               with:
