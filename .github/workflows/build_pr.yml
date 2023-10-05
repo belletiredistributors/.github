@@ -86,9 +86,10 @@ jobs:
             #     diff: true
             #     diff-branch: ${{ github.base_ref }}
             #     diff-storage: _xml_coverage_reports
-
+            - name: Pre-processing Coverage Report
+              run: sed -i 's#filename="#filename="src/#g' coverage/**/*.xml
             - name: Publish coverage report for changed files
-              uses: kevinvalk/cobertura-action@prefix
+              uses: 5monkeys/cobertura-action@master
               with:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
                 path: coverage/**/coverage.cobertura.xml
