@@ -48,7 +48,7 @@ jobs:
                   growth-rate: 2.0
                   test-factor: 1.0
             - name: Pre-processing Coverage Report
-              run: ((Get-Content -path coverage\**\*.xml) -replace 'filename="', 'filename="src/') | Set-Content -path coverage\**\*.xml
+              run: ((Get-Content -path coverage\**\*.xml) -replace 'filename="', 'filename="src\') | Set-Content -path coverage\**\*.xml        
             - name: Publish coverage report for changed files
               uses: 5monkeys/cobertura-action@master
               with:
