@@ -47,45 +47,6 @@ jobs:
                   base-size: 200
                   growth-rate: 2.0
                   test-factor: 1.0
-    calculate_code_coverage:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v3
-            
-            - name: Setup .NET
-              uses: actions/setup-dotnet@v1
-              with:
-                  dotnet-version: 6.0.x
-                  source-url: ${{ secrets.nuget-source-url }}
-              env:
-                  NUGET_AUTH_TOKEN: ${{ secrets.nuget-source-access-token }}
-            - name: Test
-              run: dotnet test --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage ${{ inputs.build-target-path }} 
-      
-            # - name: Code Coverage Report
-            #   uses: irongut/CodeCoverageSummary@v1.3.0
-            #   with:
-            #     filename: coverage/**/coverage.cobertura.xml
-            #     badge: true
-            #     fail_below_min: true
-            #     format: markdown
-            #     hide_branch_rate: false
-            #     hide_complexity: true
-            #     indicators: true
-            #     output: both
-            #     thresholds: '60 80'
-
-            # - name: Produce the coverage report
-            #   uses: insightsengineering/coverage-action@v2
-            #   with:
-            #     path: coverage/**/coverage.cobertura.xml
-            #     threshold: 80
-            #     fail: true
-            #     publish: true
-            #     diff: true
-            #     diff-branch: ${{ github.base_ref }}
-            #     diff-storage: _xml_coverage_reports
             - name: Pre-processing Coverage Report
               run: sed -i 's#filename="#filename="src/#g' coverage/**/*.xml
             - name: Publish coverage report for changed files
@@ -93,7 +54,7 @@ jobs:
               with:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
                 path: coverage/**/coverage.cobertura.xml
-                skip_covered: false
+                skip_covered: true
                 minimum_coverage: 80
                 show_line: true
                 show_missing: true
@@ -103,11 +64,4 @@ jobs:
                 link_missing_lines: true
                 fail_below_threshold: true
               continue-on-error: false
-
-            # - name: Add Coverage PR Comment
-            #   uses: marocchino/sticky-pull-request-comment@v2
-            #   if: github.event_name == 'pull_request'
-            #   with:
-            #     recreate: true
-            #     path: code-coverage-results.md
             
