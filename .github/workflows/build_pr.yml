@@ -88,7 +88,7 @@ jobs:
             #     diff-storage: _xml_coverage_reports
 
             - name: Publish coverage report for changed files
-              uses: 5monkeys/cobertura-action@master
+              uses: kevinvalk/cobertura-action@prefix
               with:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
                 path: coverage/**/coverage.cobertura.xml
