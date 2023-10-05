@@ -76,16 +76,16 @@ jobs:
             #     output: both
             #     thresholds: '60 80'
 
-            # - name: Produce the coverage report
-            #   uses: insightsengineering/coverage-action@v2
-            #   with:
-            #     path: coverage/**/coverage.cobertura.xml
-            #     threshold: 80
-            #     fail: true
-            #     publish: true
-            #     diff: true
-            #     diff-branch: ${{ github.base_ref }}
-            #     diff-storage: _xml_coverage_reports
+            - name: Produce the coverage report
+              uses: insightsengineering/coverage-action@v2
+              with:
+                path: coverage/**/coverage.cobertura.xml
+                threshold: 80
+                fail: true
+                publish: true
+                diff: true
+                diff-branch: ${{ github.base_ref }}
+                diff-storage: _xml_coverage_reports
 
             - name: Publish coverage report for changed files
               uses: 5monkeys/cobertura-action@v8
@@ -93,7 +93,7 @@ jobs:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
                 path: coverage/**/coverage.cobertura.xml
                 skip_covered: false
-                minimum_coverage: 0
+                minimum_coverage: 80
                 show_line: true
                 show_missing: true
                 only_changed_files: true
