@@ -98,7 +98,7 @@ jobs:
                 show_missing: true
                 only_changed_files: true
                 report_name: Changed files code coverage
-              continue-on-error: true
+              continue-on-error: false
 
             # - name: Add Coverage PR Comment
             #   uses: marocchino/sticky-pull-request-comment@v2
