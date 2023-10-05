@@ -58,7 +58,8 @@ jobs:
               with:
                   dotnet-version: 6.0.x
                   source-url: ${{ secrets.nuget-source-url }}
-                  
+              env:
+                  NUGET_AUTH_TOKEN: ${{ secrets.nuget-source-access-token }}
             - name: Test
               run: dotnet test --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage ${{ inputs.build-target-path }} 
       
