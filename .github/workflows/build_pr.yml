@@ -98,6 +98,9 @@ jobs:
                 show_missing: true
                 only_changed_files: true
                 report_name: Changed files code coverage
+                show_branch: true
+                link_missing_lines: true
+                fail_below_threshold: true
               continue-on-error: false
 
             # - name: Add Coverage PR Comment
