@@ -46,7 +46,7 @@ jobs:
                   continue-on-error: false
                   base-size: 200
                   growth-rate: 2.0
-                  test-factor: 1.0
+                  test-factor: 0.0
             - name: Pre-processing Coverage Report
               run: |
                     $xmlDoc = [xml](Get-Content .\coverage\**\*.xml)
