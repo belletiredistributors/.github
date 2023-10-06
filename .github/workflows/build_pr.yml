@@ -58,7 +58,7 @@ jobs:
               with:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
                 path: coverage.xml
-                skip_covered: true
+                skip_covered: false
                 minimum_coverage: 80
                 show_line: true
                 show_missing: true
