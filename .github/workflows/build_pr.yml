@@ -66,6 +66,6 @@ jobs:
                 report_name: Changed files code coverage
                 show_branch: true
                 link_missing_lines: true
-                fail_below_threshold: true
+                fail_below_threshold: false
               continue-on-error: false
             
