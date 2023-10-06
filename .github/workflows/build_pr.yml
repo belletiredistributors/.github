@@ -36,6 +36,10 @@ jobs:
             - name: Build
               run: dotnet build --no-restore ${{ inputs.build-target-path }}
 
+            - name: Clear coverage directory
+              run: |
+                    Get-ChildItem -Path .\coverage -Include *.* -Recurse | foreach {$_.Delete}
+
             - name: Test
               run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage ${{ inputs.build-target-path }} 
               
