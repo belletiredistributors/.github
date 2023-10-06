@@ -54,7 +54,7 @@ jobs:
             - name: Pre-processing Coverage Report
               run: |
                     $xmlDoc = [xml](Get-Content .\coverage\**\*.xml)
-                    $xmlDoc.coverage.packages.package.classes.class | foreach{ $_.filename = 'src/' + $_.filename.replace('\', '/') }
+                    $xmldoc.coverage.packages.package.classes.class | foreach{ $_.filename = ( $_.filename.StartsWith('src/') ? '' : 'src/') + $_.filename.replace('\', '/') }
                     $xmlDoc.Save("$pwd\coverage.xml")
             
             - name: Publish coverage report for changed files
