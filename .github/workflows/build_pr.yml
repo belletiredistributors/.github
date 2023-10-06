@@ -47,11 +47,11 @@ jobs:
                   base-size: 200
                   growth-rate: 2.0
                   test-factor: 1.0
-            - name: Pre-processing Coverage Report
-              run: |
-                    $xmlDoc = [xml](Get-Content .\coverage\**\*.xml)
-                    $xmlDoc.coverage.packages.package.classes.class | foreach{ $_.filename = 'src/' + $_.filename.replace('\', '/') }
-                    $xmlDoc.Save("$pwd\coverage.xml")
+            # - name: Pre-processing Coverage Report
+            #   run: |
+            #         $xmlDoc = [xml](Get-Content .\coverage\**\*.xml)
+            #         $xmlDoc.coverage.packages.package.classes.class | foreach{ $_.filename = 'src/' + $_.filename.replace('\', '/') }
+            #         $xmlDoc.Save("$pwd\coverage.xml")
             
             - name: Publish coverage report for changed files
               uses: 5monkeys/cobertura-action@master
