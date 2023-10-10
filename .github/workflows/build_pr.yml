@@ -53,9 +53,16 @@ jobs:
                   base-size: 200
                   growth-rate: 2.0
                   test-factor: 0.0
+            - name: Merge Reports
+              uses: danielpalme/ReportGenerator-GitHub-Action@5.1.26
+              with:
+                reports: .\coverage\**\*.xml
+                targetdir: .\coveragereport
+                reporttypes: HtmlInline;Cobertura
+                toolpath: 'reportgeneratortool' 
             - name: Pre-processing Coverage Report
               run: |
-                    $xmlDoc = [xml](Get-Content .\coverage\**\*.xml)
+                    $xmlDoc = [xml](Get-Content .\coveragereport\*.xml)
                     $xmldoc.coverage.packages.package.classes.class | foreach{ $_.filename = ( $_.filename.StartsWith('src/') ? '' : 'src/') + $_.filename.replace('\', '/') }
                     $xmlDoc.Save("$pwd\coverage.xml")
             
