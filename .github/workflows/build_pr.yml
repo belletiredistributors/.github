@@ -19,6 +19,8 @@ jobs:
         runs-on: windows-latest
         steps:
             - uses: actions/checkout@v2
+              with:
+                fetch-depth: 0
 
             - name: Setup .NET
               uses: actions/setup-dotnet@v1
@@ -34,5 +36,42 @@ jobs:
             - name: Build
               run: dotnet build --no-restore ${{ inputs.build-target-path }}
 
+            - name: Clear coverage directory
+              run: |
+                    if(Test-Path -Path .\coverage) {
+                        Get-ChildItem -Path .\coverage -Include *.* -Recurse | foreach {$_.Delete()}
+                    }
+
             - name: Test
-              run: dotnet test --no-build --verbosity normal ${{ inputs.build-target-path }}
+              run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage ${{ inputs.build-target-path }} 
+              
+            - name: PR Metrics
+              uses: microsoft/PR-Metrics@v1.5.7
+              env:
+                  PR_METRICS_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  continue-on-error: false
+                  base-size: 200
+                  growth-rate: 2.0
+                  test-factor: 0.0
+            - name: Pre-processing Coverage Report
+              run: |
+                    $xmlDoc = [xml](Get-Content .\coverage\**\*.xml)
+                    $xmldoc.coverage.packages.package.classes.class | foreach{ $_.filename = ( $_.filename.StartsWith('src/') ? '' : 'src/') + $_.filename.replace('\', '/') }
+                    $xmlDoc.Save("$pwd\coverage.xml")
+            
+            - name: Publish coverage report for changed files
+              uses: 5monkeys/cobertura-action@master
+              with:
+                repo_token: ${{ secrets.GITHUB_TOKEN }}
+                path: coverage.xml
+                skip_covered: false
+                minimum_coverage: 80
+                show_line: true
+                show_missing: true
+                only_changed_files: true
+                report_name: Changed files code coverage
+                show_branch: true
+                link_missing_lines: true
+                fail_below_threshold: false
+              continue-on-error: false
+            
