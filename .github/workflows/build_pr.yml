@@ -70,7 +70,7 @@ jobs:
               uses: 5monkeys/cobertura-action@master
               with:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
-                path: coverage.xml
+                path: .\coveragereport\Cobertura.xml
                 skip_covered: false
                 minimum_coverage: 80
                 show_line: true
