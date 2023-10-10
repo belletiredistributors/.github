@@ -60,11 +60,11 @@ jobs:
                 targetdir: .\coveragereport
                 reporttypes: HtmlInline;Cobertura
                 toolpath: 'reportgeneratortool' 
-            - name: Pre-processing Coverage Report
-              run: |
-                    $xmlDoc = [xml](Get-Content .\coveragereport\*.xml)
-                    $xmldoc.coverage.packages.package.classes.class | foreach{ $_.filename = ( $_.filename.StartsWith('src/') ? '' : 'src/') + $_.filename.replace('\', '/') }
-                    $xmlDoc.Save("$pwd\coverage.xml")
+            # - name: Pre-processing Coverage Report
+            #   run: |
+            #         $xmlDoc = [xml](Get-Content .\coveragereport\*.xml)
+            #         $xmldoc.coverage.packages.package.classes.class | foreach{ $_.filename = ( $_.filename.StartsWith('src/') ? '' : 'src/') + $_.filename.replace('\', '/') }
+            #         $xmlDoc.Save("$pwd\coverage.xml")
             
             - name: Publish coverage report for changed files
               uses: 5monkeys/cobertura-action@master
@@ -82,3 +82,8 @@ jobs:
                 fail_below_threshold: false
               continue-on-error: false
             
+            - name: Upload coverage report artifact
+              uses: actions/upload-artifact@v2.2.3
+              with:
+                name: CoverageReport # Artifact name        
+                path: coveragereport # Directory containing files to upload
