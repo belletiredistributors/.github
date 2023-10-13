@@ -65,8 +65,8 @@ jobs:
                     $xmlDoc = [xml](Get-Content .\coveragereport\Cobertura.xml)
                     $xmldoc.coverage.packages.package.classes.class | 
                     foreach { 
-                      Write-Host $_.filename;
                       $_.filename = 'src\' + $_.filename.split("src\")[1];
+                      Write-Host $_.filename;
                     }
                     $xmlDoc.Save("$pwd\coverage.xml")
             
