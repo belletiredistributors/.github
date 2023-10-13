@@ -65,7 +65,7 @@ jobs:
                     $xmlDoc = [xml](Get-Content .\coveragereport\Cobertura.xml)
                     $xmldoc.coverage.packages.package.classes.class | 
                     foreach { 
-                      $_.filename = 'src/' + $_.filename.split("src/")[1]
+                      $_.filename = 'src\' + $_.filename.split("src\")[1]
                     $xmlDoc.Save("$pwd\coverage.xml")
             
             - name: Publish coverage report for changed files
