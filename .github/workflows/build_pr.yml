@@ -67,6 +67,7 @@ jobs:
                     foreach { 
                       $_.filename = 'src\' + $_.filename.split("src\")[1];
                       $_.filename = $_.filename.replace('\', '/');
+                      Write-Host $_.filename;
                     }
                     $xmlDoc.Save("$pwd\coverage.xml")
             
