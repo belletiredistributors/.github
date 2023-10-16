@@ -66,7 +66,7 @@ jobs:
                     $xmldoc.coverage.packages.package.classes.class | 
                     foreach { 
                       $_.filename = 'src/' + $_.filename.split("src/")[1];
-
+                      $_.filename = $_.filename.replace('\', '/');
                       Write-Host $_.filename;
                     }
                     $xmlDoc.Save("$pwd\coverage.xml")
@@ -75,7 +75,7 @@ jobs:
               uses: 5monkeys/cobertura-action@master
               with:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
-                path: .coverage.xml
+                path: .\coverage.xml
                 skip_covered: false
                 minimum_coverage: 80
                 show_line: true
