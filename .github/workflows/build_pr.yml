@@ -63,7 +63,7 @@ jobs:
             - name: Pre-processing Coverage Report
               run: |
                     $xmlDoc = [xml](Get-Content .\coveragereport\Cobertura.xml)
-                    $xmldoc.coverage.packages.package.classes.class | 
+                    $xmldoc.coverage.packages.package.classes.class | ?{$_} | 
                     foreach { 
                       $_.filename = 'src\' + $_.filename.split("src\")[1];
                       $_.filename = $_.filename.replace('\', '/');
