@@ -10,8 +10,9 @@ jobs:
         with:
             app-name: YOUR APP NAME
             octo-package-name: YOUR OCTOPUS PACKAGE NAME
-            octo-project-name: YOUR COTOCPUS PROJECT NAME
+            octo-project-name: YOUR OCTOPUS PROJECT NAME
             octo-channel: What channel to use for the Octopus release
+            octo-space: What space to target for the package and release
             build-target-path: PATH TO .SLN OR .CSPROJ TO BUILD
             publish-target-path: PATH TO .SLN OR .CSPROJ TO PUBLISH
         secrets:
