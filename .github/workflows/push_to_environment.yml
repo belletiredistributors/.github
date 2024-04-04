@@ -83,8 +83,8 @@ jobs:
         needs: build_and_test
         runs-on: ubuntu-latest
         env:
-            OCTOPUS_URL: ${{ secrets.OCTOPUS_CLI_SERVER }}
-            OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_APIKEY }}
+            OCTOPUS_URL: ${{ secrets.octo-cli-server }}
+            OCTOPUS_API_KEY: ${{ secrets.octo-api-key }}
             PACKAGE_VERSION: $(date +'%Y.%m.%d').$GITHUB_RUN_NUMBER
         steps:
             - name: Set Octopus Space Environment Variable
