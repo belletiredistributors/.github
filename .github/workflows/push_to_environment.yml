@@ -113,7 +113,7 @@ jobs:
               run: octopus package zip create --id ${{ inputs.octo-package-name }} --version "${{ env.PACKAGE_VERSION }}" --base-path "./publish/${{ inputs.app-name }}" --out-folder "./package"
 
             - name: Push Octopus Package
-              run: octopus package upload --package "./package/${{ inputs.octo-package-name }}.${{ env.PACKAGE_VERSION }}.zip" --replace-existing
+              run: octopus package upload --package "./package/${{ inputs.octo-package-name }}.${{ env.PACKAGE_VERSION }}.zip"
 
             - name: Create Octopus Release For Default Environment
               if: ${{ inputs.octo-channel == '' }}
