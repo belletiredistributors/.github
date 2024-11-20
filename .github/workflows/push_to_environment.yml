@@ -74,7 +74,7 @@ jobs:
               run: dotnet publish ${{ inputs.publish-target-path }} --output ./publish/${{ inputs.app-name }}/ -c Release
 
             - name: Save publish output
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   name: ${{ inputs.app-name }}
                   path: ./publish/${{ inputs.app-name }}/
@@ -96,7 +96,7 @@ jobs:
               if: ${{ inputs.octo-space != '' }}
 
             - name: Download publish output
-              uses: actions/download-artifact@v3
+              uses: actions/download-artifact@v4
               with:
                   name: ${{ inputs.app-name }}
                   path: ./publish/${{ inputs.app-name }}/
